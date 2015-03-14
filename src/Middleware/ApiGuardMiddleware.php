@@ -2,7 +2,6 @@
 
 use Closure;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Http\Request;
 use Chrisbjr\ApiGuard\Models\ApiLog;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Contracts\Routing\Middleware;
@@ -46,7 +45,7 @@ class ApiGuardMiddleware implements Middleware
         // Let's instantiate the response class first
         $this->manager = new Manager;
 
-        $this->manager->parseIncludes(Input::get(Config::get('api-guard::includeKeyword', 'include'), array()));
+        $this->manager->parseIncludes(Input::get(Config::get('apiguard.includeKeyword', 'include'), array()));
 
         $this->response = new Response($this->manager);
 
@@ -68,11 +67,11 @@ class ApiGuardMiddleware implements Middleware
 
         if ($keyAuthentication === true) {
 
-            $key = $request->header(Config::get('api-guard::keyName'));
+            $key = $request->header(Config::get('apiguard.keyName'));
 
             if (empty($key)) {
                 // Try getting the key from elsewhere
-                $key = Input::get(Config::get('api-guard::keyName'));
+                $key = Input::get(Config::get('apiguard.keyName'));
             }
 
             if (empty($key)) {
@@ -99,7 +98,7 @@ class ApiGuardMiddleware implements Middleware
         // Then check the limits of this method
         if (!empty($apiMethods[$method]['limits'])) {
 
-            if (Config::get('api-guard::logging') === false) {
+            if (Config::get('apiguard.logging') === false) {
                 Log::warning("[Chrisbjr/ApiGuard] You specified a limit in the $method method but API logging needs to be enabled in the configuration for this to work.");
             }
 
@@ -117,7 +116,7 @@ class ApiGuardMiddleware implements Middleware
                     if (!$this->apiKey->ignore_limits) {
                         // This means the apikey is not ignoring the limits
 
-                        $keyIncrement = (!empty($limits['key']['increment'])) ? $limits['key']['increment'] : Config::get('api-guard::keyLimitIncrement');
+                        $keyIncrement = (!empty($limits['key']['increment'])) ? $limits['key']['increment'] : Config::get('apiguard.keyLimitIncrement');
 
                         $keyIncrementTime = strtotime('-' . $keyIncrement);
 
@@ -151,7 +150,7 @@ class ApiGuardMiddleware implements Middleware
                         // then we skip this
                     } else {
 
-                        $methodIncrement = (!empty($limits['method']['increment'])) ? $limits['method']['increment'] : Config::get('api-guard::keyLimitIncrement');
+                        $methodIncrement = (!empty($limits['method']['increment'])) ? $limits['method']['increment'] : Config::get('apiguard.keyLimitIncrement');
 
                         $methodIncrementTime = strtotime('-' . $methodIncrement);
 
@@ -176,7 +175,7 @@ class ApiGuardMiddleware implements Middleware
         }
         // End of cheking limits
 
-        if (Config::get('api-guard::logging') && $keyAuthentication == true) {
+        if (Config::get('apiguard.logging') && $keyAuthentication == true) {
             // Log this API request
             $apiLog = new ApiLog;
             $apiLog->api_key_id = $this->apiKey->id;
