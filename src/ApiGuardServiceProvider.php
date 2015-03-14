@@ -19,7 +19,7 @@ class ApiGuardServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->publishes([
-			__DIR__ . '/../config/apiguard.php' => config_path('apiguard.php'),
+			__DIR__ . '/../config/' => config_path(),
 		], 'config');
 
 		$this->publishes([
