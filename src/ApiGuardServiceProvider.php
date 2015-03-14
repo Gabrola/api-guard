@@ -18,11 +18,15 @@ class ApiGuardServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('chrisbjr/api-guard');
+		$this->publishes([
+			__DIR__ . '/../config/apiguard.php' => config_path('apiguard.php'),
+		], 'config');
 
-        $this->app->register('EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider');
+		$this->publishes([
+			__DIR__ . '/../migrations/2014_06_12_084423_create_api_keys_table.php' => base_path('/database/migrations'),
+		], 'migrations');
 
-        require_once __DIR__.'/../../routes.php';
+        require_once __DIR__ . '/routes.php';
 	}
 
 	/**
@@ -32,7 +36,7 @@ class ApiGuardServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app->register('EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider');
 	}
 
 	/**

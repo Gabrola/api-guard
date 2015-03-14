@@ -18,18 +18,12 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*",
-        "illuminate/database": "*",
+        "laravel/framework": "5.0.*",
         "ellipsesynergie/api-response": "0.8.*"
     },
     "autoload": {
-        "classmap": [
-            "src/migrations",
-            "src/controllers",
-            "src/models"
-        ],
         "psr-4": {
-            "Chrisbjr\\ApiGuard\\": "src/Chrisbjr/ApiGuard"
+            "Chrisbjr\\ApiGuard\\": "src/"
         }
     },
     "minimum-stability": "stable"
