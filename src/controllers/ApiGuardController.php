@@ -1,6 +1,4 @@
-<?php
-
-namespace Chrisbjr\ApiGuard;
+<?php namespace Chrisbjr\ApiGuard\Controllers;
 
 use Controller;
 use Route;

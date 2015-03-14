@@ -1,12 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: chrisbjr
- * Date: 6/26/14
- * Time: 7:52 PM
- */
-
-namespace Chrisbjr\ApiGuard;
+<?php namespace Chrisbjr\ApiGuard\Controllers;
 
 use Chrisbjr\ApiGuard\Transformers\ApiKeyTransformer;
 

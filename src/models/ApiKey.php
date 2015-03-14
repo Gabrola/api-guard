@@ -1,5 +1,4 @@
-<?php
-namespace Chrisbjr\ApiGuard;
+<?php namespace Chrisbjr\ApiGuard\Models;
 
 /**
  * Class ApiKey
