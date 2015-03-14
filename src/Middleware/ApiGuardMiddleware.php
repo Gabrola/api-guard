@@ -33,14 +33,7 @@ class ApiGuardMiddleware implements Middleware
      */
     public function handle($request, Closure $next)
     {
-        /*
-         * We cannot access options like in filters, so we may either pass parameters through
-         * route actions, or from config.
-         */
         $action = $request->route()->getAction();
-
-        //Get apiMethods from action
-        $apiMethods = $action['apiMethods'];
 
         // Let's instantiate the response class first
         $this->manager = new Manager;
@@ -57,11 +50,15 @@ class ApiGuardMiddleware implements Middleware
             return $this->response->errorMethodNotAllowed();
         }
 
-        $method = last($routeArray);
+        $controller = $routeArray[0];
+        $method = $routeArray[1];
+
+        //Get apiMethods from config
+        $apiMethods = Config::get('apimethods.' . $controller . '.' . $method, array());
 
         // We should check if key authentication is enabled for this method
         $keyAuthentication = true;
-        if (isset($apiMethods[$method]['keyAuthentication']) && $apiMethods[$method]['keyAuthentication'] === false) {
+        if (isset($apiMethods['keyAuthentication']) && $apiMethods['keyAuthentication'] === false) {
             $keyAuthentication = false;
         }
 
@@ -88,21 +85,21 @@ class ApiGuardMiddleware implements Middleware
 
             // API key exists
             // Check level of API
-            if (!empty($apiMethods[$method]['level'])) {
-                if ($this->apiKey->level < $apiMethods[$method]['level']) {
+            if (!empty($apiMethods['level'])) {
+                if ($this->apiKey->level < $apiMethods['level']) {
                     return $this->response->errorForbidden();
                 }
             }
         }
 
         // Then check the limits of this method
-        if (!empty($apiMethods[$method]['limits'])) {
+        if (!empty($apiMethods['limits'])) {
 
             if (Config::get('apiguard.logging') === false) {
                 Log::warning("[Chrisbjr/ApiGuard] You specified a limit in the $method method but API logging needs to be enabled in the configuration for this to work.");
             }
 
-            $limits = $apiMethods[$method]['limits'];
+            $limits = $apiMethods['limits'];
 
             // We get key level limits first
             if ($this->apiKey != null && !empty($limits['key'])) {

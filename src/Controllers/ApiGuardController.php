@@ -20,7 +20,7 @@ class ApiGuardController extends Controller
 
     public function __construct()
     {
-        $this->middleware('Chrisbjr\\ApiGuard\\Middleware\\ApiGuardMiddleware');
+        $this->middleware('Chrisbjr\ApiGuard\Middleware\ApiGuardMiddleware');
 
         $this->manager = new Manager;
         $this->manager->parseIncludes(Input::get(Config::get('apiguard.includeKeyword', 'include'), array()));
