@@ -1,9 +1,11 @@
 <?php namespace Chrisbjr\ApiGuard\Models;
 
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * Class ApiKey
  */
-class ApiKey extends \Eloquent
+class ApiKey extends Model
 {
     protected $table = 'api_keys';
 
