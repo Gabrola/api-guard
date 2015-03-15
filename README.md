@@ -15,7 +15,7 @@ I've been looking for an equivalent for Laravel but did not find any so this is 
 
 ### Required setup
 
-NOTE: Currently, ApiGuard will only work for Laravel 4.2.*.
+NOTE: Currently, ApiGuard will only work for Laravel 5.0.*
 
 In the `require` key of `composer.json` file add the following
 
@@ -39,7 +39,8 @@ In your `config/app.php` add `'Chrisbjr\ApiGuard\ApiGuardServiceProvider'` to th
 
 Now generate the api-guard migration (make sure you have your database configuration set up correctly):
 
-    $ php artisan migrate --package="chrisbjr/api-guard"
+    $ php artisan vendor:publish --tag=migrations
+    $ php artisan migrate
 
 It will setup two tables - api_keys and api_logs.
 
@@ -83,9 +84,9 @@ Now, to prevent others from generating API keys through the route above, you can
 
 To create your own configuration file for ApiGuard, run the following command:
 
-    $ php artisan config:publish chrisbjr/api-guard
+    $ php artisan vendor:publish --tag=config
 
-The configuration file will be found in `app/config/packages/chrisbjr/api-guard/config.php`. Open this file and change the `generateApiKeyRoute` variable to `false`
+The configuration file will be found in `config/apiguard.php`. Open this file and change the `generateApiKeyRoute` variable to `false`
 
     'generateApiKeyRoute' => false
 
@@ -95,34 +96,12 @@ Generally, you will want to generate API keys for each user in your application.
 
 Basic usage of ApiGuard is to create a controller and extend that class to use the `ApiGuardController`.
 
-    <?php
-    use Chrisbjr\ApiGuard\ApiGuardController;
+    <?php namespace App\Http\Controllers
+
+    use Chrisbjr\ApiGuard\Controllers\ApiGuardController;
 
     class BooksController extends ApiGuardController
     {
-        protected $apiMethods = [
-            'all' => [
-                'keyAuthentication' => true,
-                'level' => 1,
-                'limits' => [
-                    // The variable below sets API key limits
-                    'key' => [
-                        'increment' => '1 hour',
-                        'limit' => 100
-                    ],
-                    // The variable below sets API method limits
-                    'method' => [
-                        'increment' => '1 day',
-                        'limit' => 1000
-                    ]
-                ]
-            ],
-            
-            'show' => [
-                'keyAuthentication' => false
-            ]
-        ];
-
         public function all()
         {
             $books = Book::all();
@@ -143,6 +122,31 @@ Basic usage of ApiGuard is to create a controller and extend that class to use t
     }
 
 Notice the `$apiMethods` variable. You can set `limits`s , `level`s, and `keyAuthentication` for each method here.
+To set limits, access levels, and key authentication, head to 'config/apimethods.php' and add an entry as such
+
+    'App\Http\Controllers\BooksController'  =>  [
+        'all' => [
+            'keyAuthentication' => true,
+            'level' => 1,
+            'limits' => [
+                // The variable below sets API key limits
+                'key' => [
+                    'increment' => '1 hour',
+                    'limit' => 100
+                ],
+                // The variable below sets API method limits
+                'method' => [
+                    'increment' => '1 day',
+                    'limit' => 1000
+                ]
+            ]
+        ],
+
+        'show' => [
+            'keyAuthentication' => false
+        ]
+    ]
+
 If you don't specify any, the defaults would be that no limits would be implemented, no level access, and key authentication would be required.
 
 You should also be able to use the api-response object by using `$this->response`. More examples can be found on the Github page: [https://github.com/ellipsesynergie/api-response](https://github.com/ellipsesynergie/api-response).
@@ -185,13 +189,10 @@ You can easily access the User instance from the belongsTo() relationship of the
 Note that while we have utilized [Confide](https://github.com/zizaco/confide) for handling the credential checking, you can have your own way of having this done (like using the native Laravel Auth class, or [Sentry](https://github.com/cartalyst/sentry) for that matter).
 
 ```
-<?php
+<?php namespace api\v1;
 
-
-namespace api\v1;
-
-use Chrisbjr\ApiGuard\ApiGuardController;
-use Chrisbjr\ApiGuard\ApiKey;
+use Chrisbjr\ApiGuard\Controllers\ApiGuardController;
+use Chrisbjr\ApiGuard\Models\ApiKey;
 use Chrisbjr\ApiGuard\Transformers\ApiKeyTransformer;
 use Confide;
 use Input;
@@ -200,12 +201,6 @@ use Validator;
 
 class UserApiController extends ApiGuardController
 {
-    protected $apiMethods = [
-        'authenticate' => [
-            'keyAuthentication' => false
-        ]
-    ];
-
     public function authenticate() {
         $credentials['username'] = Input::json('username');
         $credentials['password'] = Input::json('password');
@@ -278,4 +273,14 @@ class UserApiController extends ApiGuardController
         ]);
     }
 }
+```
+
+config/apimethods.php
+
+```
+    'api\v1\UserApiController'  =>  [
+        'authenticate' => [
+            'keyAuthentication' => false
+        ]
+    ]
 ```

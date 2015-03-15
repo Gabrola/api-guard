@@ -1,6 +1,7 @@
 <?php namespace Chrisbjr\ApiGuard\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class ApiKey
@@ -11,7 +12,7 @@ class ApiKey extends Model
 
     public function user()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(Config::get('auth.model'));
     }
 
     public function generateKey()

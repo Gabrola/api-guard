@@ -1,10 +1,12 @@
 <?php namespace Chrisbjr\ApiGuard\Middleware;
 
+use Chrisbjr\ApiGuard\Models\ApiKey;
 use Closure;
 use Illuminate\Support\Facades\Config;
 use Chrisbjr\ApiGuard\Models\ApiLog;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Input;
@@ -146,7 +148,6 @@ class ApiGuardMiddleware implements Middleware
                     if ($this->apiKey != null && $this->apiKey->ignore_limits == true) {
                         // then we skip this
                     } else {
-
                         $methodIncrement = (!empty($limits['method']['increment'])) ? $limits['method']['increment'] : Config::get('apiguard.keyLimitIncrement');
 
                         $methodIncrementTime = strtotime('-' . $methodIncrement);
@@ -176,7 +177,7 @@ class ApiGuardMiddleware implements Middleware
             // Log this API request
             $apiLog = new ApiLog;
             $apiLog->api_key_id = $this->apiKey->id;
-            $apiLog->route = Route::currentRouteAction();
+            $apiLog->route = $action['controller'];
             $apiLog->method = $request->getMethod();
             $apiLog->params = http_build_query(Input::all());
             $apiLog->ip_address = $request->getClientIp();
