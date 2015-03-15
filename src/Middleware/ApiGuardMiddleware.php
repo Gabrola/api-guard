@@ -1,4 +1,5 @@
-<?php namespace Chrisbjr\ApiGuard\Middleware;
+<?php
+namespace Chrisbjr\ApiGuard\Middleware;
 
 use Chrisbjr\ApiGuard\Models\ApiKey;
 use Closure;

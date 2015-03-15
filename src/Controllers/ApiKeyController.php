@@ -1,4 +1,5 @@
-<?php namespace Chrisbjr\ApiGuard\Controllers;
+<?php
+namespace Chrisbjr\ApiGuard\Controllers;
 
 use Chrisbjr\ApiGuard\Models\ApiKey;
 use Chrisbjr\ApiGuard\Transformers\ApiKeyTransformer;

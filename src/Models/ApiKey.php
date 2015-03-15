@@ -1,10 +1,20 @@
-<?php namespace Chrisbjr\ApiGuard\Models;
+<?php
+namespace Chrisbjr\ApiGuard\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Class ApiKey
+ * An Eloquent Model: 'ApiKey'
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $key
+ * @property integer $level
+ * @property boolean $ignore_limits
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class ApiKey extends Model
 {

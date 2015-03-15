@@ -1,4 +1,5 @@
-<?php namespace Chrisbjr\ApiGuard\Controllers;
+<?php
+namespace Chrisbjr\ApiGuard\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
