@@ -121,7 +121,6 @@ Basic usage of ApiGuard is to create a controller and extend that class to use t
         }
     }
 
-Notice the `$apiMethods` variable. You can set `limits`s , `level`s, and `keyAuthentication` for each method here.
 To set limits, access levels, and key authentication, head to 'config/apimethods.php' and add an entry as such
 
     'App\Http\Controllers\BooksController'  =>  [
