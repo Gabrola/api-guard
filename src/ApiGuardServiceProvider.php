@@ -20,11 +20,8 @@ class ApiGuardServiceProvider extends ServiceProvider {
 	{
 		$this->publishes([
 			__DIR__ . '/../config/' => config_path(),
-		], 'config');
-
-		$this->publishes([
 			__DIR__ . '/../migrations/' => base_path('database/migrations'),
-		], 'migrations');
+		], 'apiguard');
 
         require_once __DIR__ . '/routes.php';
 	}

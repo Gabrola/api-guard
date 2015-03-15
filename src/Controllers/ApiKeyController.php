@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Input;
 
 class ApiKeyController extends ApiGuardController
 {
+    protected $apiMethods = [
+        'create' => [
+            'keyAuthentication' => false
+        ]
+    ];
+
     public function create()
     {
         $apiKey = new ApiKey;
