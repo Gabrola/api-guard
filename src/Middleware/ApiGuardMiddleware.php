@@ -55,7 +55,7 @@ class ApiGuardMiddleware implements Middleware
         $method = last($routeArray);
 
         //Get apiMethods from config
-        $apiMethods = $action['apiMethods'];
+        $apiMethods = $action['apiMethods'][$method];
 
         // We should check if key authentication is enabled for this method
         $keyAuthentication = true;
