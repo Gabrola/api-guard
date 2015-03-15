@@ -1,6 +1,7 @@
 <?php namespace Chrisbjr\ApiGuard;
 
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 class ApiGuardServiceProvider extends ServiceProvider {
 
@@ -20,7 +21,9 @@ class ApiGuardServiceProvider extends ServiceProvider {
 	{
 		$this->publishes([
 			__DIR__ . '/../config/' => config_path(),
-			__DIR__ . '/../migrations/' => base_path('database/migrations'),
+
+			__DIR__ . '/../migrations/2014_06_12_084423_create_api_keys_table.php' =>
+				base_path('database/migrations/' . Carbon::now()->format('Y_m_d_His').'_create_api_keys_table.php'),
 		], 'apiguard');
 
         require_once __DIR__ . '/routes.php';
